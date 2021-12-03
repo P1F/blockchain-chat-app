@@ -1,5 +1,5 @@
-const TodoList = artifacts.require("TodoList");
+const Chat = artifacts.require("Chat");
 
 module.exports = function (deployer) {
-  deployer.deploy(TodoList);
+  deployer.deploy(Chat);
 };

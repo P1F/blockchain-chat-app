@@ -46,7 +46,7 @@ export const createTask = async () => {
 	if (!isInitialized) {
 		await init();
 	}
-	
+
 	const transaction = await TodoListContract.methods
 										.createTask("Teste")
 										.send({ from: selectedAccount })
