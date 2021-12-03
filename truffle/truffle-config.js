@@ -1,20 +1,20 @@
 module.exports = {
   networks: {
     development: {
-      host: "127.0.0.1",
+      host: '127.0.0.1',
       port: 7545,
-      network_id: "*",
+      network_id: '*',
     },
   },
   compilers: {
     solc: {
-      version: "0.8.10",
+      version: '0.8.10',
       settings: {
         optimizer: {
           enabled: false,
-          runs: 200
+          runs: 200,
         },
-      }
-    }
+      },
+    },
   },
 };
