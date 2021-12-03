@@ -7,7 +7,6 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleChange = (event) => {
-    event.preventDefault();
     setUsername(event.target.value);
   }
 
