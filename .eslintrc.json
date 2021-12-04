@@ -9,6 +9,9 @@
     ],
     "parser": "@babel/eslint-parser",
     "parserOptions": {
+        "babelOptions": {
+            "presets": ["@babel/preset-react"]
+         },
         "ecmaFeatures": {
             "jsx": true
         },
@@ -19,7 +22,5 @@
     "plugins": [
         "react",
         "prettier"
-    ],
-    "rules": {
-    }
+    ]
 }
