@@ -25,7 +25,8 @@
         "prettier"
     ],
     "rules": {
-        "react/no-unstable-nested-components": "off",
+        "react/prop-types": "off",
+        "react/function-component-definition": "off",
         "jsx-a11y/no-autofocus": "off",
         "no-unused-vars": "warn",
         "prefer-destructuring": [

@@ -27,7 +27,7 @@ export const init = async () => {
       console.log(`Selected account changed to ${selectedAccount}`);
     });
   } else {
-    throw Error('Please install MetaMask!');
+    throw Error('Por favor instale o MetaMask!');
   }
 
   const web3 = new Web3(provider);
@@ -46,6 +46,8 @@ export const init = async () => {
 
 export const createUser = async (username) => {
   if (!isInitialized) await init();
+
+  if (!selectedAccount) return null;
 
   const transaction = await ChatContract.methods
     .createUser(username)
