@@ -7,7 +7,7 @@ let ChatContract;
 
 let isInitialized = false;
 
-export const init = async () => {
+const init = async () => {
   let provider = window.ethereum;
 
   if (typeof provider !== 'undefined') {
@@ -56,8 +56,8 @@ export const createUser = async (username) => {
 export const sendMessage = async (message) => {
   if (!isInitialized) await init();
 
-  const dateUnix = new Date().getTime() / 1000;
-
+  const dateUnix = Math.round(new Date().getTime() / 1000);
+  console.log(`dateUnix`, dateUnix);
   const transaction = await ChatContract.methods
     .createMessage(message, dateUnix)
     .send({ from: selectedAccount })
