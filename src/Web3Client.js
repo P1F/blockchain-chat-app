@@ -1,4 +1,5 @@
 import ChatContractBuild from 'contracts/Chat.json';
+import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3';
 
 let selectedAccount;
@@ -8,9 +9,9 @@ let ChatContract;
 let isInitialized = false;
 
 export const init = async () => {
-  const provider = window.ethereum;
+  const provider = await detectEthereumProvider();
 
-  if (typeof provider !== 'undefined') {
+  if (provider) {
     provider
       .request({ method: 'eth_requestAccounts' })
       .then((accounts) => {
@@ -25,6 +26,8 @@ export const init = async () => {
       selectedAccount = accounts[0];
       console.log(`Selected account changed to ${selectedAccount}`);
     });
+  } else {
+    throw Error('Please install MetaMask!');
   }
 
   const web3 = new Web3(provider);

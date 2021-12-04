@@ -9,9 +9,10 @@ const App = function () {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
 
-  // useEffect(() => {
-  //   init();
-  // });
+  useEffect(() => {
+    init()
+      .catch(alert);
+  });
 
   const handleLoginInputChange = (event) => {
     setUsername(event.target.value);

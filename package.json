@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/eslint-parser": "^7.5.4",
+    "@metamask/detect-provider": "^1.2.0",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
