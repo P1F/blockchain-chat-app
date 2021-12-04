@@ -5,7 +5,8 @@
     },
     "extends": [
         "eslint:recommended",
-        "plugin:react/recommended"
+        "plugin:react/recommended",
+        "airbnb"
     ],
     "parser": "@babel/eslint-parser",
     "parserOptions": {
@@ -24,6 +25,13 @@
         "prettier"
     ],
     "rules": {
-        "no-unused-vars": "warn" 
+        "prefer-destructuring": [
+            "warn", 
+            {"object": true, "array": false}
+        ],
+        "react/jsx-filename-extension": [
+            "warn",
+            { "extensions": [".js", ".jsx"] }
+        ],
     }
 }

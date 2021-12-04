@@ -18,7 +18,7 @@ contract Chat {
     mapping(address => User) public users;
     mapping(uint256 => Message) public messages;
 
-    function userExists(address pubkey) public view returns (bool) {
+    function userExists(address pubkey) private view returns (bool) {
         return bytes(users[pubkey].name).length > 0;
     }
 
@@ -27,10 +27,10 @@ contract Chat {
         users[msg.sender] = User(_name);
     }
 
-    function getUsername(address pubkey) public view returns (string memory) {
-        require(userExists(msg.sender));
-        return users[pubkey].name;
-    }
+    // function getUsername(address pubkey) public view returns (string memory) {
+    //     require(userExists(msg.sender));
+    //     return users[pubkey].name;
+    // }
 
     function createMessage(string memory _content, uint256 _date) public {
         require(userExists(msg.sender));

@@ -7,8 +7,8 @@ let ChatContract;
 
 let isInitialized = false;
 
-const init = async () => {
-  let provider = window.ethereum;
+export const init = async () => {
+  const provider = window.ethereum;
 
   if (typeof provider !== 'undefined') {
     provider
@@ -19,10 +19,9 @@ const init = async () => {
       })
       .catch((err) => {
         console.log(err);
-        return;
       });
 
-    window.ethereum.on('accountsChanged', function (accounts) {
+    window.ethereum.on('accountsChanged', (accounts) => {
       selectedAccount = accounts[0];
       console.log(`Selected account changed to ${selectedAccount}`);
     });
@@ -32,7 +31,7 @@ const init = async () => {
 
   const networkId = await web3.eth.net.getId();
 
-  console.log(`networkId`, networkId);
+  console.log('networkId', networkId);
 
   ChatContract = new web3.eth.Contract(
     ChatContractBuild.abi,
@@ -57,11 +56,38 @@ export const sendMessage = async (message) => {
   if (!isInitialized) await init();
 
   const dateUnix = Math.round(new Date().getTime() / 1000);
-  console.log(`dateUnix`, dateUnix);
+  console.log('dateUnix', dateUnix);
   const transaction = await ChatContract.methods
     .createMessage(message, dateUnix)
     .send({ from: selectedAccount })
     .then(console.log);
 
   return transaction;
+};
+
+export const getUsername = async (address) => {
+  const username = await ChatContract.methods
+    .users(address)
+    .call()
+    .then((result) => result.name);
+
+  return username;
+};
+
+export const getMessages = async () => {
+  if (!isInitialized) await init();
+
+  const messagesCount = await ChatContract.methods.messagesCount.call().call();
+  const messages = new Array(messagesCount);
+  for (let i = 1; i <= messagesCount; i += 1) {
+    ChatContract.methods
+      .messages(i)
+      .call()
+      .then((result) => {
+        const { sender, content, date } = result;
+        messages[i - 1] = { sender, content, date };
+      });
+  }
+
+  return messages;
 };

@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
-import { createUser, sendMessage } from './Web3Client';
+import React, { useEffect, useState } from 'react';
+import { init, createUser, sendMessage, getMessages } from './Web3Client';
 import './App.css';
 
-function App() {
+const App = function () {
   const [username, setUsername] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
+
+  // useEffect(() => {
+  //   init();
+  // });
 
   const handleLoginInputChange = (event) => {
     setUsername(event.target.value);
@@ -36,12 +40,14 @@ function App() {
 
   const handleMessageSubmit = async (event) => {
     event.preventDefault();
-    const transaction = await sendMessage(message);
-    console.log(transaction);
-    setMessage('');
+    // const transaction = await sendMessage(message);
+    // console.log(transaction);
+    // setMessage('');
+    const msgs = await getMessages();
+    console.log('msgs', msgs);
   };
 
-  const Login = () => {
+  const Login = function () {
     return (
       <div id='acesso_usuario'>
         <form id='login' onSubmit={handleLoginSubmit}>
@@ -60,7 +66,7 @@ function App() {
     );
   };
 
-  const Chat = () => {
+  const Chat = function () {
     return (
       <div id='sala_chat'>
         <div id='historico_mensagens'>
@@ -90,6 +96,6 @@ function App() {
       {isLoggedIn && <Chat />}
     </div>
   );
-}
+};
 
 export default App;
