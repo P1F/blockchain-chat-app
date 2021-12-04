@@ -1,9 +1,9 @@
-import TodoListContractBuild from 'contracts/TodoList.json';
+import ChatContractBuild from 'contracts/Chat.json';
 import Web3 from 'web3';
 
 let selectedAccount;
 
-let TodoListContract;
+let ChatContract;
 
 let isInitialized = false;
 
@@ -34,21 +34,32 @@ export const init = async () => {
 
   console.log(`networkId`, networkId);
 
-  TodoListContract = new web3.eth.Contract(
-    TodoListContractBuild.abi,
-    TodoListContractBuild.networks[networkId].address
+  ChatContract = new web3.eth.Contract(
+    ChatContractBuild.abi,
+    ChatContractBuild.networks[networkId].address
   );
 
   isInitialized = true;
 };
 
-export const createTask = async () => {
-  if (!isInitialized) {
-    await init();
-  }
+export const createUser = async (username) => {
+  if (!isInitialized) await init();
 
-  const transaction = await TodoListContract.methods
-    .createTask('Teste')
+  const transaction = await ChatContract.methods
+    .createUser(username)
+    .send({ from: selectedAccount })
+    .then(console.log);
+
+  return transaction;
+};
+
+export const sendMessage = async (message) => {
+  if (!isInitialized) await init();
+
+  const dateUnix = new Date().getTime() / 1000;
+
+  const transaction = await ChatContract.methods
+    .createMessage(message, dateUnix)
     .send({ from: selectedAccount })
     .then(console.log);
 

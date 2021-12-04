@@ -13,15 +13,15 @@ contract Chat {
     struct Message {
         uint256 id;
         string content;
-        uint256 date;
+        uint256 date; // in Unix timestammp
     }
 
     mapping(uint256 => User) public users;
     mapping(uint256 => Message) public messages;
 
     constructor() {
-        createUser("user001");
-        createMessage("message001", 0);
+        createUser('user001');
+        createMessage('message001', 0);
     }
 
     function createUser(string memory _name) public {
