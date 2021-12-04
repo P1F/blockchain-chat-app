@@ -52,7 +52,7 @@ export const createUser = async (username) => {
   const transaction = await ChatContract.methods
     .createUser(username)
     .send({ from: selectedAccount })
-    .then(console.log);
+    .then((result) => result);
 
   return transaction;
 };
@@ -61,11 +61,11 @@ export const sendMessage = async (message) => {
   if (!isInitialized) await init();
 
   const dateUnix = Math.round(new Date().getTime() / 1000);
-  console.log('dateUnix', dateUnix);
+
   const transaction = await ChatContract.methods
     .createMessage(message, dateUnix)
     .send({ from: selectedAccount })
-    .then(console.log);
+    .then((result) => result);
 
   return transaction;
 };

@@ -35,8 +35,8 @@ const App = function () {
     */
     const transaction = await createUser(username);
     if (transaction) {
-      console.log(transaction);
       setIsLoggedIn(true);
+      console.log(transaction);
     } else {
       alert('Nenhuma carteira foi selecionada!');
     }
@@ -48,11 +48,9 @@ const App = function () {
 
   const handleMessageSubmit = async (event) => {
     event.preventDefault();
-    // const transaction = await sendMessage(message);
-    // console.log(transaction);
-    // setMessage('');
-    const msgs = await getMessages();
-    console.log('msgs', msgs);
+    const transaction = await sendMessage(message);
+    console.log(transaction);
+    setMessage('');
   };
 
   return (
