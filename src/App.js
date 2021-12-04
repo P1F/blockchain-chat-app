@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { init, createUser, sendMessage, getMessages } from './Web3Client';
+import {
+  init, createUser, sendMessage, getMessages,
+} from './Web3Client';
 import './App.css';
 
 const App = function () {
@@ -49,18 +51,18 @@ const App = function () {
 
   const Login = function () {
     return (
-      <div id='acesso_usuario'>
-        <form id='login' onSubmit={handleLoginSubmit}>
+      <div id="acesso_usuario">
+        <form id="login" onSubmit={handleLoginSubmit}>
           <input
-            type='text'
-            id='apelido'
-            name='apelido'
+            type="text"
+            id="apelido"
+            name="apelido"
             value={username}
             autoFocus
-            placeholder='Insira seu apelido'
+            placeholder="Insira seu apelido"
             onChange={handleLoginInputChange}
           />
-          <input type='submit' value='Entrar' />
+          <input type="submit" value="Entrar" />
         </form>
       </div>
     );
@@ -68,30 +70,30 @@ const App = function () {
 
   const Chat = function () {
     return (
-      <div id='sala_chat'>
-        <div id='historico_mensagens'>
-          <select multiple='multiple' id='lista_usuarios'>
-            <option value=''>Participantes</option>
+      <div id="sala_chat">
+        <div id="historico_mensagens">
+          <select multiple="multiple" id="lista_usuarios">
+            <option value="">Participantes</option>
           </select>
         </div>
-        <form id='chat' onSubmit={handleMessageSubmit}>
+        <form id="chat" onSubmit={handleMessageSubmit}>
           <input
-            type='text'
-            id='texto_mensagem'
-            name='texto_mensagem'
+            type="text"
+            id="texto_mensagem"
+            name="texto_mensagem"
             value={message}
             autoFocus
-            placeholder='Insira sua mensagem'
+            placeholder="Insira sua mensagem"
             onChange={handleMessageInputChange}
           />
-          <input type='submit' value='Enviar mensagem!' />
+          <input type="submit" value="Enviar mensagem!" />
         </form>
       </div>
     );
   };
 
   return (
-    <div className='App'>
+    <div className="App">
       {!isLoggedIn && <Login />}
       {isLoggedIn && <Chat />}
     </div>

@@ -35,7 +35,7 @@ export const init = async () => {
 
   ChatContract = new web3.eth.Contract(
     ChatContractBuild.abi,
-    ChatContractBuild.networks[networkId].address
+    ChatContractBuild.networks[networkId].address,
   );
 
   isInitialized = true;

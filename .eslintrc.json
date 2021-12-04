@@ -25,6 +25,9 @@
         "prettier"
     ],
     "rules": {
+        "react/no-unstable-nested-components": "warn",
+        "jsx-a11y/no-autofocus": "warn",
+        "no-unused-vars": "warn",
         "prefer-destructuring": [
             "warn", 
             {"object": true, "array": false}
@@ -32,6 +35,6 @@
         "react/jsx-filename-extension": [
             "warn",
             { "extensions": [".js", ".jsx"] }
-        ],
+        ]
     }
 }
