@@ -2,77 +2,47 @@ import ChatContractBuild from 'contracts/Chat.json';
 import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3';
 
-let selectedAccount;
-
 let ChatContract;
-
-let isInitialized = false;
 
 export const init = async () => {
   const provider = await detectEthereumProvider();
 
-  if (provider) {
-    provider
-      .request({ method: 'eth_requestAccounts' })
-      .then((accounts) => {
-        selectedAccount = accounts[0];
-        console.log(`Selected account is ${selectedAccount}`);
-        return provider;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    window.ethereum.on('accountsChanged', (accounts) => {
-      selectedAccount = accounts[0];
-      console.log(`Selected account changed to ${selectedAccount}`);
-    });
-  } else {
-    throw Error('Por favor instale o MetaMask!');
-  }
+  if (!provider) throw Error('Por favor instale o MetaMask!');
 
   const web3 = new Web3(provider);
 
   const networkId = await web3.eth.net.getId();
-
-  console.log('networkId', networkId);
 
   ChatContract = new web3.eth.Contract(
     ChatContractBuild.abi,
     ChatContractBuild.networks[networkId].address,
   );
 
-  isInitialized = true;
+  return provider;
 };
 
-export const createUser = async (username) => {
-  if (!isInitialized) await init();
-  if (!selectedAccount) return null;
-
+export const createUser = async (username, address) => {
   const transaction = await ChatContract.methods
     .createUser(username)
-    .send({ from: selectedAccount })
+    .send({ from: address })
     .then((result) => result)
-    .catch((err) => err);
+    .catch(() => null);
 
-  return selectedAccount;
+  return transaction;
 };
 
-export const sendMessage = async (message) => {
-  if (!isInitialized) await init();
-
+export const sendMessage = async (message, address) => {
   const dateUnix = Math.round(new Date().getTime() / 1000);
 
   const transaction = await ChatContract.methods
     .createMessage(message, dateUnix)
-    .send({ from: selectedAccount })
+    .send({ from: address })
     .then((result) => result);
 
-  return selectedAccount;
+  return transaction;
 };
 
 export const getUsername = async (address) => {
-  console.log('address', address);
   const username = await ChatContract.methods
     .users(address)
     .call()
@@ -82,8 +52,6 @@ export const getUsername = async (address) => {
 };
 
 export const getMessages = async () => {
-  if (!isInitialized) await init();
-
   const messagesCount = await ChatContract.methods.messagesCount.call().call();
   const messages = new Array(messagesCount);
   for (let i = 1; i <= messagesCount; i += 1) {

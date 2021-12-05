@@ -8,7 +8,7 @@ const App = function () {
   const [username, setUsername] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
-  const [myAccount, setMyAccount] = useState(null);
+  const [myAddress, setMyAddress] = useState(null);
   const [hasMetamask, setHasMetamask] = useState(false);
   const [provider, setProvider] = useState(null);
 
@@ -17,6 +17,36 @@ const App = function () {
       .then((result) => {
         setProvider(result);
         setHasMetamask(true);
+        let selectedAccount;
+        const ethereum = result;
+        // Request accounts and set the selected one
+        ethereum
+          .request({ method: 'eth_requestAccounts' })
+          .then((accounts) => {
+            selectedAccount = accounts[0];
+            setMyAddress(selectedAccount);
+            console.log(`Selected account is ${selectedAccount}`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
+        // Set selected account on change
+        ethereum.on('accountsChanged', (accounts) => {
+          selectedAccount = accounts[0];
+          setMyAddress(selectedAccount);
+          console.log(`Selected account changed to ${selectedAccount}`);
+        });
+
+        // Listen when chain change
+        ethereum.on('chainChanged', (chainId) => {
+          console.log('Chain changed!');
+          // Handle the new chain.
+          // Correctly handling chain changes can be complicated.
+          // We recommend reloading the page unless you have good reason not to.
+
+        // window.location.reload();
+        });
       })
       .catch(alert);
   }, []);
@@ -35,8 +65,18 @@ const App = function () {
 
     const isValidUsername = /^[0-9a-zA-Z_.-]+$/.test(username);
     if (!isValidUsername) {
-      alert('Nome inválido!');
+      alert('Apelido inválido!');
       return;
+    }
+
+    const myUsername = await getUsername(myAddress);
+    if (myUsername) {
+      if (myUsername !== username) {
+        alert(`Seu apelido é '${myUsername}'`);
+      } else {
+        setIsLoggedIn(true);
+        return;
+      }
     }
     /*
     TODO: PROCESSAR CRIAÇÃO DO USER
@@ -45,19 +85,11 @@ const App = function () {
           Se a transação tiver sucesso, deixa o usuário ir para o chat.
           Caso contrário, retorna um aviso e permance na tela de login.
     */
-    const account = await createUser(username);
-    if (typeof account === 'object') {
+    const transaction = await createUser(username, myAddress);
+    if (transaction) {
       setIsLoggedIn(true);
-      setMyAccount(account);
     } else {
-      let msg;
-      switch (account) {
-        case 0: msg = 'Nenhuma carteira foi selecionada!'; break;
-        case 4001: msg = 'Transação rejeitada!'; break;
-        default: msg = 'Conta já existente!';
-      }
-
-      alert(msg);
+      alert('Um erro ocorreu durante a transação.');
     }
   };
 
@@ -73,9 +105,9 @@ const App = function () {
 
   const handleMessageSubmit = async (event) => {
     event.preventDefault();
-    // const transaction = await sendMessage(message);
-    // console.log(transaction);
-    // setMessage('');
+    const transaction = await sendMessage(message, myAddress);
+    console.log(transaction);
+    setMessage('');
 
     // testes
   };
