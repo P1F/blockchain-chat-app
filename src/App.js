@@ -9,11 +9,15 @@ const App = function () {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
   const [myAccount, setMyAccount] = useState(null);
+  const [hasMetamask, setHasMetamask] = useState(false);
   const [provider, setProvider] = useState(null);
 
   useEffect(() => {
     init()
-      .then((result) => { setProvider(result); })
+      .then((result) => {
+        setProvider(result);
+        setHasMetamask(true);
+      })
       .catch(alert);
   }, []);
 
@@ -24,6 +28,11 @@ const App = function () {
 
   const handleLoginSubmit = async (event) => {
     event.preventDefault();
+    if (!hasMetamask) {
+      alert('Por favor instale o MetaMask!');
+      return;
+    }
+
     const isValidUsername = /^[0-9a-zA-Z_.-]+$/.test(username);
     if (!isValidUsername) {
       alert('Nome inválido!');
