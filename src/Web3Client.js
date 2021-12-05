@@ -20,7 +20,7 @@ export const init = async () => {
 
   console.log('ChatContract', ChatContract);
 
-  return provider;
+  return { web3, provider };
 };
 
 export const createUser = async (username, address) => {
@@ -53,7 +53,7 @@ export const getUsername = async (address) => {
   return username;
 };
 
-export const getMessages = async () => {
+export const getAllMessages = async () => {
   const messagesCount = await ChatContract.methods.messagesCount.call().call();
   const messages = new Array(messagesCount);
   for (let i = 1; i <= messagesCount; i += 1) {
@@ -61,8 +61,12 @@ export const getMessages = async () => {
       .messages(i)
       .call()
       .then((result) => {
-        const { sender, content, date } = result;
-        messages[i - 1] = { sender, content, date };
+        const {
+          id, sender, content, date,
+        } = result;
+        messages[i - 1] = {
+          id, sender, content, date,
+        };
       });
   }
 

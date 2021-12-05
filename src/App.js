@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  init, createUser, sendMessage, getMessages, getUsername, getAllUsernames,
+  init, createUser, sendMessage, getUsername, getAllMessages, getAllUsernames,
 } from './Web3Client';
 import './App.css';
 
@@ -10,19 +10,29 @@ const App = function () {
   const [message, setMessage] = useState('');
   const [myAddress, setMyAddress] = useState(null);
   const [hasMetamask, setHasMetamask] = useState(false);
-  const [provider, setProvider] = useState(null);
-  const [userList, setUserList] = useState([]);
+  const [usersList, setUsersList] = useState([]);
+  const [msgHistory, setMsgHistory] = useState([]);
 
-  useEffect(async () => {
+  const updateChat = async () => {
+    // Get all usernames and messages from the chain
+    const users = await getAllUsernames();
+    const messages = await getAllMessages();
+    // Update users list and message history
+    setUsersList(users);
+    setMsgHistory(messages);
+  };
+
+  useEffect(() => {
     init()
       .then((result) => {
-        setProvider(result);
-        setHasMetamask(true);
         let selectedAccount;
-        const ethereum = result;
+        const { web3, provider } = result;
+
+        setHasMetamask(true);
+
         // TODO: QUANDO O CARA MUDAR DE CARTEIRA, DESLOGAR
         // Request accounts and set the selected one
-        ethereum
+        provider
           .request({ method: 'eth_requestAccounts' })
           .then((accounts) => {
             selectedAccount = accounts[0];
@@ -34,19 +44,16 @@ const App = function () {
           });
 
         // Set selected account on change
-        ethereum.on('accountsChanged', (accounts) => {
+        provider.on('accountsChanged', (accounts) => {
           selectedAccount = accounts[0];
           setMyAddress(selectedAccount);
           console.log(`Selected account changed to ${selectedAccount}`);
         });
 
-        // Listen when chain change
-        ethereum.on('chainChanged', (chainId) => {
-          // Handle the new chain.
-          // Correctly handling chain changes can be complicated.
-          // We recommend reloading the page unless you have good reason not to.
-          console.log('chainId', chainId);
-          window.location.reload();
+        // Subscribe to incoming block headers.
+        // This can be used as timer to check for changes on the blockchain.
+        web3.eth.subscribe('newBlockHeaders', () => {
+          updateChat();
         });
       })
       .catch(alert);
@@ -76,6 +83,8 @@ const App = function () {
         alert(`Seu apelido é '${myUsername}'`);
       } else {
         setIsLoggedIn(true);
+        // initialize chat
+        updateChat();
       }
       return;
     }
@@ -89,6 +98,8 @@ const App = function () {
     const transaction = await createUser(username, myAddress);
     if (transaction) {
       setIsLoggedIn(true);
+      // initialize chat
+      updateChat();
     } else {
       alert('Um erro ocorreu durante a transação.');
     }
@@ -127,6 +138,8 @@ const App = function () {
           onSubmit={handleMessageSubmit}
           onInputChange={handleMessageInputChange}
           message={message}
+          users={usersList}
+          messageHistory={msgHistory}
         />
       )}
     </div>
@@ -150,26 +163,34 @@ const Login = ({ onSubmit, onInputChange, username }) => (
   </div>
 );
 
-const Chat = ({ onSubmit, onInputChange, message }) => (
-  <div id="sala_chat">
-    <div id="historico_mensagens">
-      <select multiple="multiple" id="lista_usuarios">
-        <option value="">Participantes</option>
-      </select>
-    </div>
-    <form id="chat" onSubmit={onSubmit}>
-      <input
-        type="text"
-        id="texto_mensagem"
-        name="texto_mensagem"
-        value={message}
-        autoFocus
-        placeholder="Insira sua mensagem"
-        onChange={onInputChange}
-      />
-      <input type="submit" value="Enviar mensagem!" />
-    </form>
-  </div>
-);
+const Chat = ({
+  onSubmit, onInputChange, message, users, messageHistory,
+}) => {
+  const usersList = users.map((user) => <option value={user} key={user}>{user}</option>);
+  const history = messageHistory.map((msg) => <p key={msg.id}>{msg.content}</p>);
 
+  return (
+    <div id="sala_chat">
+      <div id="historico_mensagens">
+        <select multiple="multiple" id="lista_usuarios">
+          <option value="">Participantes</option>
+          {usersList}
+        </select>
+        {history}
+      </div>
+      <form id="chat" onSubmit={onSubmit}>
+        <input
+          type="text"
+          id="texto_mensagem"
+          name="texto_mensagem"
+          value={message}
+          autoFocus
+          placeholder="Insira sua mensagem"
+          onChange={onInputChange}
+        />
+        <input type="submit" value="Enviar mensagem!" />
+      </form>
+    </div>
+  );
+};
 export default App;
