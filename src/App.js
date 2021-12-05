@@ -76,8 +76,8 @@ const App = function () {
         alert(`Seu apelido é '${myUsername}'`);
       } else {
         setIsLoggedIn(true);
-        return;
       }
+      return;
     }
     /*
     TODO: PROCESSAR CRIAÇÃO DO USER
