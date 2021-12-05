@@ -18,6 +18,8 @@ export const init = async () => {
     ChatContractBuild.networks[networkId].address,
   );
 
+  console.log('ChatContract', ChatContract);
+
   return provider;
 };
 
@@ -65,4 +67,21 @@ export const getMessages = async () => {
   }
 
   return messages;
+};
+
+export const getAllUsernames = async () => {
+  const usersCount = await ChatContract.methods.usersCount.call().call();
+  const users = new Array(usersCount);
+  for (let i = 1; i <= usersCount; i += 1) {
+    ChatContract.methods
+      .addresses(i)
+      .call()
+      .then(async (result) => {
+        const address = result;
+        const username = await getUsername(address);
+        users[i - 1] = username;
+      });
+  }
+
+  return users;
 };

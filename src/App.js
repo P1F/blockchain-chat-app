@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  init, createUser, sendMessage, getMessages, getUsername,
+  init, createUser, sendMessage, getMessages, getUsername, getAllUsernames,
 } from './Web3Client';
 import './App.css';
 
@@ -11,8 +11,9 @@ const App = function () {
   const [myAddress, setMyAddress] = useState(null);
   const [hasMetamask, setHasMetamask] = useState(false);
   const [provider, setProvider] = useState(null);
+  const [userList, setUserList] = useState([]);
 
-  useEffect(() => {
+  useEffect(async () => {
     init()
       .then((result) => {
         setProvider(result);
@@ -41,12 +42,11 @@ const App = function () {
 
         // Listen when chain change
         ethereum.on('chainChanged', (chainId) => {
-          console.log('Chain changed!');
           // Handle the new chain.
           // Correctly handling chain changes can be complicated.
           // We recommend reloading the page unless you have good reason not to.
-
-        // window.location.reload();
+          console.log('chainId', chainId);
+          window.location.reload();
         });
       })
       .catch(alert);
