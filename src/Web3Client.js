@@ -17,6 +17,7 @@ export const init = async () => {
       .then((accounts) => {
         selectedAccount = accounts[0];
         console.log(`Selected account is ${selectedAccount}`);
+        return provider;
       })
       .catch((err) => {
         console.log(err);
@@ -46,15 +47,15 @@ export const init = async () => {
 
 export const createUser = async (username) => {
   if (!isInitialized) await init();
-
   if (!selectedAccount) return null;
 
   const transaction = await ChatContract.methods
     .createUser(username)
     .send({ from: selectedAccount })
-    .then((result) => result);
+    .then((result) => result)
+    .catch((err) => err);
 
-  return transaction;
+  return selectedAccount;
 };
 
 export const sendMessage = async (message) => {
@@ -67,14 +68,15 @@ export const sendMessage = async (message) => {
     .send({ from: selectedAccount })
     .then((result) => result);
 
-  return transaction;
+  return selectedAccount;
 };
 
 export const getUsername = async (address) => {
+  console.log('address', address);
   const username = await ChatContract.methods
     .users(address)
     .call()
-    .then((result) => result.name);
+    .then((result) => result);
 
   return username;
 };

@@ -23,17 +23,12 @@ contract Chat {
     }
 
     function createUser(string memory _name) public {
-        require(!userExists(msg.sender));
+        require(!userExists(msg.sender), 'User already exists!');
         users[msg.sender] = User(_name);
     }
 
-    // function getUsername(address pubkey) public view returns (string memory) {
-    //     require(userExists(msg.sender));
-    //     return users[pubkey].name;
-    // }
-
     function createMessage(string memory _content, uint256 _date) public {
-        require(userExists(msg.sender));
+        require(userExists(msg.sender), "Message sender doesn't exist!");
         messagesCount++;
         messages[messagesCount] = Message(
             messagesCount,

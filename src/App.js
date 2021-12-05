@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  init, createUser, sendMessage, getMessages,
+  init, createUser, sendMessage, getMessages, getUsername,
 } from './Web3Client';
 import './App.css';
 
@@ -8,14 +8,17 @@ const App = function () {
   const [username, setUsername] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
+  const [myAccount, setMyAccount] = useState(null);
+  const [provider, setProvider] = useState(null);
 
   useEffect(() => {
     init()
+      .then((result) => { setProvider(result); })
       .catch(alert);
-    setUsername('');
   }, []);
 
   const handleLoginInputChange = (event) => {
+    event.preventDefault();
     setUsername(event.target.value);
   };
 
@@ -33,24 +36,39 @@ const App = function () {
           Se a transação tiver sucesso, deixa o usuário ir para o chat.
           Caso contrário, retorna um aviso e permance na tela de login.
     */
-    const transaction = await createUser(username);
-    if (transaction) {
+    const account = await createUser(username);
+    if (typeof account === 'object') {
       setIsLoggedIn(true);
-      console.log(transaction);
+      setMyAccount(account);
     } else {
-      alert('Nenhuma carteira foi selecionada!');
+      let msg;
+      switch (account) {
+        case 0: msg = 'Nenhuma carteira foi selecionada!'; break;
+        case 4001: msg = 'Transação rejeitada!'; break;
+        default: msg = 'Conta já existente!';
+      }
+
+      alert(msg);
     }
   };
 
+  /*
+  TODO: MUDANÇA DE CARTEIRA
+        Quando o usuário mudar de carteira, deslogar da conta.
+  */
+
   const handleMessageInputChange = (event) => {
+    event.preventDefault();
     setMessage(event.target.value);
   };
 
   const handleMessageSubmit = async (event) => {
     event.preventDefault();
-    const transaction = await sendMessage(message);
-    console.log(transaction);
-    setMessage('');
+    // const transaction = await sendMessage(message);
+    // console.log(transaction);
+    // setMessage('');
+
+    // testes
   };
 
   return (
