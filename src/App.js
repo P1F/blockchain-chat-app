@@ -19,6 +19,7 @@ const App = function () {
         setHasMetamask(true);
         let selectedAccount;
         const ethereum = result;
+        // TODO: QUANDO O CARA MUDAR DE CARTEIRA, DESLOGAR
         // Request accounts and set the selected one
         ethereum
           .request({ method: 'eth_requestAccounts' })
