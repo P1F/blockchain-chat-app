@@ -68,12 +68,14 @@ export const getAllMessages = async () => {
     range(0, messagesCount).map((i) => ChatContract.methods
       .messages(i + 1)
       .call()
-      .then((result) => {
+      .then(async (result) => {
         const {
           id, sender, content, date,
         } = result;
+        const senderUsername = await getUsername(sender);
+        const dateFormat = (new Date(date * 1000)).toLocaleString('pt-BR');
         return {
-          id, sender, content, date,
+          id, senderUsername, content, dateFormat,
         };
       })),
   ).then((result) => result);

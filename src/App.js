@@ -120,8 +120,6 @@ const App = function () {
     const transaction = await sendMessage(message, myAddress);
     console.log(transaction);
     setMessage('');
-
-    // testes
   };
 
   return (
@@ -140,6 +138,7 @@ const App = function () {
           message={message}
           users={usersList}
           messageHistory={msgHistory}
+          myUsername={username}
         />
       )}
     </div>
@@ -164,33 +163,46 @@ const Login = ({ onSubmit, onInputChange, username }) => (
 );
 
 const Chat = ({
-  onSubmit, onInputChange, message, users, messageHistory,
-}) => {
-  const usersList = users.map((user) => (<option value={user} key={user}>{user}</option>));
-  const history = messageHistory.map((msg) => (<p key={msg.id}>{msg.content}</p>));
-
-  return (
-    <div id="sala_chat">
-      <div id="historico_mensagens">
-        <select multiple="multiple" id="lista_usuarios">
-          <option value="">Participantes</option>
-          {usersList}
-        </select>
-        {history}
+  onSubmit, onInputChange, message, users, messageHistory, myUsername,
+}) => (
+  <div id="sala_chat">
+    <div id="historico_mensagens">
+      <select multiple="multiple" id="lista_usuarios">
+        <option value="">Participantes</option>
+        {users.map((user) => (
+          <option value={user} key={user}>{user}</option>
+        ))}
+      </select>
+      <div id="mensagens">
+        {messageHistory.map((msg) => {
+          const isMyMessage = msg.senderUsername === myUsername;
+          const msgType = isMyMessage ? 'minha' : 'outro';
+          return (
+            <div id="mensagem" className={msgType}>
+              <div className="info">
+                {!isMyMessage && <span key={`${msg.id}-sender`}>{`${msg.senderUsername}:`}</span>}
+                <span key={`${msg.id}-content`}>{msg.content}</span>
+              </div>
+              <div className="data">
+                <span key={`${msg.id}-date`}>{msg.dateFormat}</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
-      <form id="chat" onSubmit={onSubmit}>
-        <input
-          type="text"
-          id="texto_mensagem"
-          name="texto_mensagem"
-          value={message}
-          autoFocus
-          placeholder="Insira sua mensagem"
-          onChange={onInputChange}
-        />
-        <input type="submit" value="Enviar mensagem!" />
-      </form>
     </div>
-  );
-};
+    <form id="chat" onSubmit={onSubmit}>
+      <input
+        type="text"
+        id="texto_mensagem"
+        name="texto_mensagem"
+        value={message}
+        autoFocus
+        placeholder="Insira sua mensagem"
+        onChange={onInputChange}
+      />
+      <input type="submit" value="Enviar mensagem!" />
+    </form>
+  </div>
+);
 export default App;

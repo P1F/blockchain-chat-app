@@ -68,7 +68,7 @@ form input[type='submit']{
     margin:0;
 }
 
-#historico_mensagens .sistema{
+/* #historico_mensagens .sistema{
     background-color: #45C5BF;
     color: #FFF;
     font-weight: bold;
@@ -77,4 +77,28 @@ form input[type='submit']{
     background-color: #CCC;
     color: #000;
     font-weight: bold;
+} */
+
+#mensagens {
+    overflow-y: auto;
+    height: 554px;
+}
+
+#mensagem {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+}
+
+#mensagem .info > span{
+    font-size: 1.2em;
+    margin-right: 12px;
+}
+
+#mensagem .data {
+    font-size: 0.8em;
+}
+
+#mensagem.minha {
+    align-items: flex-end;
 }
