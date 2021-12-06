@@ -166,8 +166,8 @@ const Login = ({ onSubmit, onInputChange, username }) => (
 const Chat = ({
   onSubmit, onInputChange, message, users, messageHistory,
 }) => {
-  const usersList = users.map((user) => <option value={user} key={user}>{user}</option>);
-  const history = messageHistory.map((msg) => <p key={msg.id}>{msg.content}</p>);
+  const usersList = users.map((user) => (<option value={user} key={user}>{user}</option>));
+  const history = messageHistory.map((msg) => (<p key={msg.id}>{msg.content}</p>));
 
   return (
     <div id="sala_chat">

@@ -2,6 +2,14 @@ import ChatContractBuild from 'contracts/Chat.json';
 import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3';
 
+const range = (start, end, step = 1) => {
+  const output = [];
+  for (let i = start; i < end; i += step) {
+    output.push(i);
+  }
+  return output;
+};
+
 let ChatContract;
 
 export const init = async () => {
@@ -55,37 +63,37 @@ export const getUsername = async (address) => {
 
 export const getAllMessages = async () => {
   const messagesCount = await ChatContract.methods.messagesCount.call().call();
-  const messages = new Array(messagesCount);
-  for (let i = 1; i <= messagesCount; i += 1) {
-    ChatContract.methods
-      .messages(i)
+
+  const messages = await Promise.all(
+    range(0, messagesCount).map((i) => ChatContract.methods
+      .messages(i + 1)
       .call()
       .then((result) => {
         const {
           id, sender, content, date,
         } = result;
-        messages[i - 1] = {
+        return {
           id, sender, content, date,
         };
-      });
-  }
+      })),
+  ).then((result) => result);
 
   return messages;
 };
 
 export const getAllUsernames = async () => {
   const usersCount = await ChatContract.methods.usersCount.call().call();
-  const users = new Array(usersCount);
-  for (let i = 1; i <= usersCount; i += 1) {
-    ChatContract.methods
-      .addresses(i)
+
+  const users = await Promise.all(
+    range(0, usersCount).map((i) => ChatContract.methods
+      .addresses(i + 1)
       .call()
       .then(async (result) => {
         const address = result;
         const username = await getUsername(address);
-        users[i - 1] = username;
-      });
-  }
+        return username;
+      })),
+  ).then((result) => result);
 
   return users;
 };
