@@ -1,7 +1,6 @@
-// import ChatContractBuild from 'contracts/Chat.json';
-import ChatContractAbi from 'contracts/abi/ChatAbi.json';
 import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3';
+import ChatContractAbi from 'contracts/abi/ChatAbi.json';
 
 const range = (start, end, step = 1) => {
   const output = [];
@@ -20,15 +19,7 @@ export const init = async () => {
 
   const web3 = new Web3(provider);
 
-  // Uncomment this section when using Ganache/Truffle
-  // const networkId = await web3.eth.net.getId();
-
-  // ChatContract = new web3.eth.Contract(
-  //   ChatContractBuild.abi,
-  //   ChatContractBuild.networks[networkId].address,
-  // );
-
-  // Contract deployed in public network
+  // Contract deployed on Ropsten test network
   const address = '0x919B63771fd943701D7f7c25d15f3F648C194422';
   ChatContract = new web3.eth.Contract(ChatContractAbi, address);
 
