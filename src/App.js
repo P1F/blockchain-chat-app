@@ -59,6 +59,11 @@ const App = function () {
       .catch(alert);
   }, []);
 
+  // Deslogar se mudar a carteira enquanto logado
+  useEffect(() => {
+    if (isLoggedIn) window.location.reload();
+  }, [myAddress]);
+
   const handleLoginInputChange = (event) => {
     event.preventDefault();
     setUsername(event.target.value);
