@@ -80,6 +80,8 @@ form input[type='submit']{
 } */
 
 #mensagens {
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
     height: 554px;
 }

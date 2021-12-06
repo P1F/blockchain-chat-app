@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   init, createUser, sendMessage, getUsername, getAllMessages, getAllUsernames,
 } from './Web3Client';
@@ -12,6 +12,8 @@ const App = function () {
   const [hasMetamask, setHasMetamask] = useState(false);
   const [usersList, setUsersList] = useState([]);
   const [msgHistory, setMsgHistory] = useState([]);
+
+  const messageEndRef = useRef();
 
   const updateChat = async () => {
     // Get all usernames and messages from the chain
@@ -63,6 +65,13 @@ const App = function () {
   useEffect(() => {
     if (isLoggedIn) window.location.reload();
   }, [myAddress]);
+
+  // Rolar automaticamente para mensagens mais recentes
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [msgHistory]);
 
   const handleLoginInputChange = (event) => {
     event.preventDefault();
@@ -144,6 +153,7 @@ const App = function () {
           users={usersList}
           messageHistory={msgHistory}
           myUsername={username}
+          messageEndRef={messageEndRef}
         />
       )}
     </div>
@@ -168,7 +178,7 @@ const Login = ({ onSubmit, onInputChange, username }) => (
 );
 
 const Chat = ({
-  onSubmit, onInputChange, message, users, messageHistory, myUsername,
+  onSubmit, onInputChange, message, users, messageHistory, myUsername, messageEndRef,
 }) => (
   <div id="sala_chat">
     <div id="historico_mensagens">
@@ -194,6 +204,7 @@ const Chat = ({
             </div>
           );
         })}
+        <div ref={messageEndRef} />
       </div>
     </div>
     <form id="chat" onSubmit={onSubmit}>
