@@ -1,6 +1,6 @@
 import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3';
-import ChatContractAbi from 'contracts/abi/ChatAbi.json';
+import ChatContractAbi from './contracts/abi/ChatAbi.json';
 
 const range = (start, end, step = 1) => {
   const output = [];
