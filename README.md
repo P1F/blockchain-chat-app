@@ -2,7 +2,7 @@
 
 A decentralized chat based on ethereum.
 
-## Before you run it
+## Before you run it locally
 
 Install truffle globally
 `npm install -g truffle`
