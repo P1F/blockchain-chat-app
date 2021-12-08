@@ -2,7 +2,4 @@
 
 A decentralized chat based on ethereum.
 
-## Before you run it
-
-Install truffle globally
-`npm install -g truffle`
+## Build structure for Heroku
