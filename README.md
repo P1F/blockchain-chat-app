@@ -2,10 +2,5 @@
 
 A decentralized chat based on ethereum.
 
-## Before you run it locally
-
-Install truffle globally
-`npm install -g truffle`
-
-## Play
+## Play with it
 https://eth-chat-dapp.herokuapp.com/
